@@ -28,16 +28,15 @@ SELECT * FROM contacts;
 -- Create a table that has the first and last name, and email address of each contact.
 -- and the amount left to reach the goal for all "live" projects in descending order. 
 
-CREATE TABLE email_contacts_remaining_goal_amount AS
-SELECT c.first_name, c.last_name, c.email, (c.goal_amount - SUM(b.amount)) AS "Remaining Goal Amount"
+-- CREATE TABLE email_contacts_remaining_goal_amount AS
+SELECT c.first_name, c.last_name, c.email, ca.goal - ca.pledged AS "Remaining_Goal_Amount"
+INTO email_contacts_remaining_goal_amount
 FROM contacts AS c
-JOIN backers AS b
-ON c.id = b.contact_id
-JOIN campaigns AS ca
-ON b.cf_id = ca.cf_id
+JOIN campaign AS ca
+ON ca.contact_id = c.contact_id
 WHERE ca.outcome = 'live'
-GROUP BY c.id, c.first_name, c.last_name, c.email, c.goal_amount
-ORDER BY "Remaining Goal Amount" DESC;
+-- GROUP BY c.contact_id, c.first_name, c.last_name, c.email, Remaining_Goal_Amount
+ORDER BY "Remaining_Goal_Amount" DESC;
 
 -- Check the table
 SELECT * FROM email_contacts_remaining_goal_amount; 
